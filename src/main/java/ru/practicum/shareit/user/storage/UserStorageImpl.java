@@ -1,10 +1,12 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,15 +17,18 @@ import java.util.Map;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserStorageImpl implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
+    private List<String> emails = new ArrayList<>();
     private long currentId = 1;
 
     @Override
+    public List<String> getEmails() {
+        return emails;
+    }
+
+    @Override
     public List<UserDto> findAll() {
-        List<User> result = new ArrayList<>(users.values());
         List<UserDto> resultDto = new ArrayList<>();
-        for (User user : result) {
-            resultDto.add(UserMapper.toUserDto(user));
-        }
+        users.values().forEach(user -> resultDto.add(UserMapper.toUserDto(user)));
         return resultDto;
     }
 
@@ -38,6 +43,7 @@ public class UserStorageImpl implements UserStorage {
     public UserDto create(UserDto userDto) {
         userDto.setId(currentId++);
         users.put(userDto.getId(), UserMapper.toUser(userDto));
+        emails.add(userDto.getEmail());
         return userDto;
     }
 
@@ -47,7 +53,9 @@ public class UserStorageImpl implements UserStorage {
         }
         User user = users.get(userId);
         if (userDto.getEmail() != null) {
+            emails.remove(user.getEmail());
             user.setEmail(userDto.getEmail());
+            emails.add(userDto.getEmail());
         }
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
@@ -59,6 +67,7 @@ public class UserStorageImpl implements UserStorage {
 
     @Override
     public void delete(long userId) {
+        emails.remove(users.get(userId).getEmail());
         users.remove(userId);
     }
 }

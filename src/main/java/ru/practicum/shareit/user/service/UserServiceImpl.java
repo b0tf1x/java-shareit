@@ -1,9 +1,10 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.user.storage.UserStorage;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
-
     @Override
     public List<UserDto> findAll() {
         return userStorage.findAll();
@@ -44,11 +44,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private void validation(String email) {
-        List<UserDto> usersDto = userStorage.findAll();
-        for (UserDto userDto : usersDto) {
-            if (userDto.getEmail().equals(email)) {
-                throw new ValidationException("Одинаковый email");
-            }
+        if (userStorage.getEmails().contains(email)) {
+            throw new ValidationException("Одинаковый email");
         }
     }
 }

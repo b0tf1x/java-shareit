@@ -1,4 +1,4 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.storage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.ArrayList;
@@ -24,22 +25,20 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public List<ItemDto> findAll(long userId) {
         List<Item> userItems = items.get(userId);
-        return userItems.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+        return userItems.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ItemDto findItemById(long itemId) {
-        ItemDto itemDto = new ItemDto();
-        for (long id : items.keySet()) {
-            List<Item> userItem = items.get(id);
-            for (Item item : userItem) {
-                if (item.getId() == itemId) {
-                    itemDto = ItemMapper.toItemDto(item);
-                }
-            }
-        }
-        log.info("Предмет успешно найден");
-        return itemDto;
+        List<Item> itemsList = new ArrayList<>();
+        items.forEach((user, items1) -> itemsList.addAll(items1));
+        return itemsList.stream()
+                .filter(item1 -> item1.getId() == itemId)
+                .findFirst()
+                .map(ItemMapper::toItemDto)
+                .orElse(new ItemDto());
     }
 
     @Override
@@ -91,7 +90,8 @@ public class ItemStorageImpl implements ItemStorage {
             List<Item> userItem = items.get(userId);
             for (Item item : userItem) {
                 if ((item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                        item.getDescription().toLowerCase().contains(text.toLowerCase())) && item.getAvailable().equals(true)) {
+                        item.getDescription().toLowerCase().contains(text.toLowerCase()))
+                        && item.getAvailable().equals(true)) {
                     result.add(ItemMapper.toItemDto(item));
                 }
             }

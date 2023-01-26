@@ -1,10 +1,10 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.storage;
 
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.List;
 
-public interface ItemService {
+public interface ItemStorage {
     List<ItemDto> findAll(long userId);
 
     ItemDto findItemById(long itemId);
@@ -15,3 +15,4 @@ public interface ItemService {
 
     List<ItemDto> search(String text);
 }
+
