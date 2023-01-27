@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,10 +22,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ItemController {
+    private static final String userHeader = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemDto> findAll(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemDto> findAll(@RequestHeader(userHeader) long userId) {
         return itemService.findAll(userId);
     }
 
@@ -35,12 +36,12 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody ItemDto itemDto) {
+    public ItemDto create(@RequestHeader(userHeader) long userId, @Valid @RequestBody ItemDto itemDto) {
         return itemService.create(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto put(@RequestHeader("X-Sharer-User-Id") long userId, @RequestBody ItemDto itemDto,
+    public ItemDto put(@RequestHeader(userHeader) long userId, @RequestBody ItemDto itemDto,
                        @PathVariable long itemId) {
         return itemService.put(userId, itemDto, itemId);
     }

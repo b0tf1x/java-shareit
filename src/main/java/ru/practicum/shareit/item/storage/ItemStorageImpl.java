@@ -85,17 +85,13 @@ public class ItemStorageImpl implements ItemStorage {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        List<ItemDto> result = new ArrayList<>();
-        for (long userId : items.keySet()) {
-            List<Item> userItem = items.get(userId);
-            for (Item item : userItem) {
-                if ((item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                        item.getDescription().toLowerCase().contains(text.toLowerCase()))
-                        && item.getAvailable().equals(true)) {
-                    result.add(ItemMapper.toItemDto(item));
-                }
-            }
-        }
-        return result;
+        List<Item> itemsList = new ArrayList<>();
+        items.forEach((user, items1) -> itemsList.addAll(items1));
+        return itemsList.stream().
+                filter(item1 -> item1.getName().toLowerCase().contains(text.toLowerCase())
+                        || item1.getDescription().toLowerCase().contains(text.toLowerCase()))
+                .filter(Item::getAvailable)
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 }

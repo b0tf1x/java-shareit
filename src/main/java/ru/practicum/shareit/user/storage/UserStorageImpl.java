@@ -10,18 +10,20 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Repository
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserStorageImpl implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
-    private List<String> emails = new ArrayList<>();
+    private final Set<String> emails = new HashSet<>();
     private long currentId = 1;
 
     @Override
-    public List<String> getEmails() {
+    public Set<String> getEmails() {
         return emails;
     }
 

@@ -13,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
+
     @Override
     public List<UserDto> findAll() {
         return userStorage.findAll();
