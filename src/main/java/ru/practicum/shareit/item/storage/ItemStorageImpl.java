@@ -25,20 +25,14 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public List<ItemDto> findAll(long userId) {
         List<Item> userItems = items.get(userId);
-        return userItems.stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
+        return userItems.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
     }
 
     @Override
     public ItemDto findItemById(long itemId) {
         List<Item> itemsList = new ArrayList<>();
         items.forEach((user, items1) -> itemsList.addAll(items1));
-        return itemsList.stream()
-                .filter(item1 -> item1.getId() == itemId)
-                .findFirst()
-                .map(ItemMapper::toItemDto)
-                .orElse(new ItemDto());
+        return itemsList.stream().filter(item1 -> item1.getId() == itemId).findFirst().map(ItemMapper::toItemDto).orElse(new ItemDto());
     }
 
     @Override
@@ -60,11 +54,9 @@ public class ItemStorageImpl implements ItemStorage {
         if (items.get(userId) == null) {
             throw new NotFoundException("Вещь не найдена");
         }
-        Item item = items.get(userId).stream()
-                .filter(item1 -> item1.getId() == itemId)
-                .findFirst().orElseThrow(() -> {
-                    throw new NotFoundException("Вещь не найдена");
-                });
+        Item item = items.get(userId).stream().filter(item1 -> item1.getId() == itemId).findFirst().orElseThrow(() -> {
+            throw new NotFoundException("Вещь не найдена");
+        });
         if (itemDto.getName() != null) {
             item.setName(itemDto.getName());
         }
@@ -87,8 +79,8 @@ public class ItemStorageImpl implements ItemStorage {
         }
         List<Item> itemsList = new ArrayList<>();
         items.forEach((user, items1) -> itemsList.addAll(items1));
-        return itemsList.stream().
-                filter(item1 -> item1.getName().toLowerCase().contains(text.toLowerCase())
+        return itemsList.stream()
+                .filter(item1 -> item1.getName().toLowerCase().contains(text.toLowerCase())
                         || item1.getDescription().toLowerCase().contains(text.toLowerCase()))
                 .filter(Item::getAvailable)
                 .map(ItemMapper::toItemDto)
