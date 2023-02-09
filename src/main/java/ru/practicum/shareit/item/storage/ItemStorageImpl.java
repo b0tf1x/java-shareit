@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Repository
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ItemStorageImpl implements ItemStorage {
     private final Map<Long, List<Item>> items = new HashMap<>();
@@ -32,7 +31,10 @@ public class ItemStorageImpl implements ItemStorage {
     public ItemDto findItemById(long itemId) {
         List<Item> itemsList = new ArrayList<>();
         items.forEach((user, items1) -> itemsList.addAll(items1));
-        return itemsList.stream().filter(item1 -> item1.getId() == itemId).findFirst().map(ItemMapper::toItemDto).orElse(new ItemDto());
+        return itemsList.stream()
+                .filter(item1 -> item1.getId() == itemId)
+                .findFirst().map(ItemMapper::toItemDto)
+                .orElse(new ItemDto());
     }
 
     @Override

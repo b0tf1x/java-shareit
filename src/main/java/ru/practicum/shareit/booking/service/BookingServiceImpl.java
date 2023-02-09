@@ -21,10 +21,11 @@ import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor(onConstructor = @Autowired)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -49,6 +50,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException("Конец брони до её начала");
         }
         bookingDto.setStatus(Status.WAITING);
+        bookingRepository.save(BookingMapper.toBooking(bookingDto));
         return bookingDto;
     }
 
@@ -91,27 +93,59 @@ public class BookingServiceImpl implements BookingService {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("Пользователь не найден");
         });
-        List<BookingDto> books = new ArrayList<>();
+        return getBooks(userId,state);
     }
 
     public List<BookingDto> getBooks(long userId, String state) {
-        List<BookingDto> books = new ArrayList<>();
+        List<Booking> books = new ArrayList<>();
         switch (state) {
             case "CURRENT":
-                bookingRepository.findByBookerCurrent(userId, LocalDateTime.now());
+                books.addAll(bookingRepository.findByBookerCurrent(userId, LocalDateTime.now()));
                 break;
             case "PAST":
+                books.addAll(bookingRepository.findByBookerPast(userId,LocalDateTime.now()));
                 break;
             case "FUTURE":
+                books.addAll(bookingRepository.findByBookerFuture(userId,LocalDateTime.now()));
                 break;
             case "WAITING":
+                books.addAll(bookingRepository.findByBookerAndState(userId,Status.WAITING));
                 break;
             case "REJECTED":
+                books.addAll(bookingRepository.findByBookerAndState(userId,Status.REJECTED));
                 break;
             default:
-                bookingRepository.findAllByBookerOrderByStartDesc(userId);
+                books.addAll(bookingRepository.findAllByBookerOrderByStartDesc(userId));
         }
+        return books.stream()
+                .map(BookingMapper::toBookingDto)
+                .collect(Collectors.toList());
     }
 
-    public List<BookingDto> getByOwner(long userId, String status);
+    @Override
+    public List<BookingDto> getByOwner(long userId, String state){
+        List<Booking> books = new ArrayList<>();
+        switch (state) {
+            case "CURRENT":
+                books.addAll(bookingRepository.getByOwnerCurrent(userId,LocalDateTime.now()));
+                break;
+            case "PAST":
+                books.addAll(bookingRepository.getByOwnerPast(userId,LocalDateTime.now()));
+                break;
+            case "FUTURE":
+                books.addAll(bookingRepository.getByOwnerFuture(userId,LocalDateTime.now()));
+                break;
+            case "WAITING":
+                books.addAll(bookingRepository.findByOwnerAndState(userId,Status.WAITING));
+                break;
+            case "REJECTED":
+                books.addAll(bookingRepository.findByOwnerAndState(userId,Status.REJECTED));
+                break;
+            default:
+            books.addAll(bookingRepository.getByOwner(userId));
+        }
+        return books.stream()
+                .map(BookingMapper::toBookingDto)
+                .collect(Collectors.toList());
+    }
 }

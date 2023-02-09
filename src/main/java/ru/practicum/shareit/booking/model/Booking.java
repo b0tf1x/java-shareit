@@ -18,7 +18,9 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name="start_time")
     private LocalDateTime start;
+    @Column(name="end_time")
     private LocalDateTime end;
     private long item;
     private long booker;
