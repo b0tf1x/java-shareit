@@ -16,14 +16,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingDto {
-    @NotNull
     private Long id;
     @FutureOrPresent
     private LocalDateTime start;
     @Future
     private LocalDateTime end;
     @NotNull
-    private long item;
+    private long itemId;
     private long booker;
     private Status status;
 }

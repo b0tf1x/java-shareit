@@ -9,9 +9,11 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,19 +40,16 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto create(long userId, ItemDto itemDto) {
-        if (userRepository.findById(userId) == null) {
-            throw new NotFoundException("пользователь не найден");
-        }
-        itemRepository.save(ItemMapper.toItem(itemDto, userId));
-        return itemDto;
+        User user = userRepository.findById(userId).orElseThrow(()->{
+            throw new NotFoundException("Пользователь не найден");
+        });
+        Item item = itemRepository.save(ItemMapper.toItem(itemDto, userId));
+        return ItemMapper.toItemDto(item);
     }
 
     @Override
     @Transactional
     public ItemDto put(long userId, ItemDto itemDto, long itemId) {
-        if (userRepository.findById(userId) == null) {
-            throw new NotFoundException("пользователь не найден");
-        }
         Item item = itemRepository.findById(itemId).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
         });
@@ -66,14 +65,20 @@ public class ItemServiceImpl implements ItemService {
             }
             itemRepository.save(item);
         } else {
-            throw new ValidationException("Ошибка при обновлении вещи");
+            throw new NotFoundException("Ошибка при обновлении вещи");
         }
-        return itemDto;
+        return ItemMapper.toItemDto(item);
     }
 
     @Override
     public List<ItemDto> search(String text) {
-        return itemRepository.search(text);
+        if (text.isBlank()){
+            return Collections.emptyList();
+        }
+        return itemRepository.search(text.toLowerCase())
+                .stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
     }
 
 }

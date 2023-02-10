@@ -15,6 +15,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "where item.available = true " +
             "and (lower(item.name) like %?1% " +
             "or lower(item.description) like %?1%)")
-    List<ItemDto> search(String text);
+    List<Item> search(String text);
 
 }

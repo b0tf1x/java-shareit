@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Slf4j
 public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -33,14 +35,15 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto create(long id, BookingDto bookingDto) {
-        Item item = itemRepository.findById(bookingDto.getItem()).orElseThrow(() -> {
+    public BookingDto create(long userId, BookingDto bookingDto) {
+        log.info("item = "+bookingDto.getItemId());
+        Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
         });
-        User user = userRepository.findById(id).orElseThrow(() -> {
+        User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("Пользователь не найден");
         });
-        if (item.getOwner() == id) {
+        if (item.getOwner() == userId) {
             throw new ValidationException("Нельзя заказать вещь у себя");
         }
         if (!item.getAvailable()) {
