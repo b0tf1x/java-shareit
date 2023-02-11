@@ -40,12 +40,10 @@ public class ItemStorageImpl implements ItemStorage {
     @Override
     public ItemDto create(long userId, ItemDto itemDto) {
         itemDto.setId(currentId++);
-        Item item = ItemMapper.toItem(itemDto, userId);
         List<Item> userItems = items.get(userId);
         if (userItems == null) {
             userItems = new ArrayList<>();
         }
-        userItems.add(item);
         items.put(userId, userItems);
         log.info("Предмет успешно создан");
         return itemDto;

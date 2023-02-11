@@ -21,4 +21,9 @@ public class ExceptionsHandler {
     public ErrorResponse handlerNotFoundException(final NotFoundException exception) {
         return new ErrorResponse("404", exception.getMessage());
     }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerFailException(final FailException exception) {
+        return new ErrorResponse("400", exception.getMessage());
+    }
 }

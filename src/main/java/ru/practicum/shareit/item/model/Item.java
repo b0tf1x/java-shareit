@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.user.model.User;
 
 @Data
 @AllArgsConstructor
@@ -19,14 +20,7 @@ public class Item {
     private String name;
     private String description;
     private Boolean available;
-    private long owner;
-    private long request;
-
-    public Item(long id, String name, String description, Boolean available, long owner) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.available = available;
-        this.owner = owner;
-    }
+    @ManyToOne
+    @JoinColumn(name = "owner")
+    private User owner;
 }

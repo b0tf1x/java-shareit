@@ -3,27 +3,51 @@ package ru.practicum.shareit.booking.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import ru.practicum.shareit.booking.dto.Status;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
-import javax.persistence.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="BOOKINGS")
+@Table(name = "BOOKINGS")
+@ToString
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name="start_time")
+    @Column(name = "start_time")
     private LocalDateTime start;
-    @Column(name="end_time")
+    @Column(name = "end_time")
     private LocalDateTime end;
-    private long item;
-    private long booker;
+    @ManyToOne
+    @JoinColumn(name = "bookerId")
+    private User booker;
+    @ManyToOne
+    @JoinColumn(name = "itemId")
+    private Item item;
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public Booking(LocalDateTime start, LocalDateTime end, User booker, Item item, Status status) {
+        this.start = start;
+        this.end = end;
+        this.booker = booker;
+        this.item = item;
+        this.status = status;
+    }
 }

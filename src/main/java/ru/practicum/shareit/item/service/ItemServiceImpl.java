@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -25,7 +24,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> findAll(long userId) {
-        return itemRepository.findAllByOwner(userId).stream()
+        return itemRepository.findAllByOwnerIdOrderById(userId).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
@@ -40,10 +39,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto create(long userId, ItemDto itemDto) {
-        User user = userRepository.findById(userId).orElseThrow(()->{
+        User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("Пользователь не найден");
         });
-        Item item = itemRepository.save(ItemMapper.toItem(itemDto, userId));
+        Item item = itemRepository.save(ItemMapper.toItem(itemDto, user));
         return ItemMapper.toItemDto(item);
     }
 
@@ -53,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
         });
-        if (item.getOwner() == userId) {
+        if (item.getOwner().getId() == userId) {
             if (itemDto.getName() != null) {
                 item.setName(itemDto.getName());
             }
@@ -72,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> search(String text) {
-        if (text.isBlank()){
+        if (text.isBlank()) {
             return Collections.emptyList();
         }
         return itemRepository.search(text.toLowerCase())

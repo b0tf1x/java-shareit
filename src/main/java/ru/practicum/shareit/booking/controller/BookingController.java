@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.user.Create;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class BookingController {
 
     @PostMapping
     public BookingDto create(@RequestHeader(userHeader) long userId,
-                             @Validated @RequestBody BookingDto bookingDto) {
+                             @Validated(Create.class) @RequestBody BookingDto bookingDto) {
         return bookingService.create(userId, bookingDto);
     }
 
@@ -45,13 +46,13 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDto> getByBooker(@RequestHeader(userHeader) long userId,
-                                        @RequestParam String state) {
+                                        @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getByBooker(userId, state);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getByOwner(@RequestHeader(userHeader) long userId,
-                                       @RequestParam String state) {
+                                       @RequestParam(defaultValue = "ALL") String state) {
         return bookingService.getByOwner(userId, state);
     }
 }
