@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserStorageImpl implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
