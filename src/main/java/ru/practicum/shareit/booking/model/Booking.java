@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(name = "start_time")
     private LocalDateTime start;
     @Column(name = "end_time")
@@ -43,11 +43,4 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Booking(LocalDateTime start, LocalDateTime end, User booker, Item item, Status status) {
-        this.start = start;
-        this.end = end;
-        this.booker = booker;
-        this.item = item;
-        this.status = status;
-    }
 }

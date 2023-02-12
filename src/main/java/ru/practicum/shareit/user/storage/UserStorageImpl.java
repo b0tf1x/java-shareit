@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.storage;
+/**package ru.practicum.shareit.user.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,4 +70,4 @@ public class UserStorageImpl implements UserStorage {
         emails.remove(users.get(userId).getEmail());
         users.remove(userId);
     }
-}
+}**/

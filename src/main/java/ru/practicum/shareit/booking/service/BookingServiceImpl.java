@@ -12,6 +12,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.FailException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.UnsupportedStateException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
@@ -36,7 +37,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto create(long userId, BookingDto bookingDto) {
+    public Booking create(long userId, BookingDto bookingDto) {
+        log.info("create");
         log.info("item = " + bookingDto.getItemId());
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
@@ -61,18 +63,19 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.save(BookingMapper.toBooking(bookingDto, item, user));
         log.info("bookingId = " + booking.getId());
         log.info(booking.toString());
-        return BookingMapper.toBookingDto(booking);
+        return booking;
     }
 
     @Transactional
     @Override
-    public BookingDto updateStatus(long userId, long bookingId, boolean approved) {
+    public Booking updateStatus(long userId, long bookingId, boolean approved) {
+        log.info("update Status");
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
         });
         Item item = booking.getItem();
         if (userId != item.getOwner().getId()) {
-            throw new ValidationException("Нельзя редактировать статус не своей вещи");
+            throw new NotFoundException("Нельзя редактировать статус не своей вещи");
         }
         if (booking.getStatus() == Status.APPROVED) {
             throw new FailException("Нельзя редактировать статус после подтверждения");
@@ -82,11 +85,12 @@ public class BookingServiceImpl implements BookingService {
         } else {
             booking.setStatus(Status.REJECTED);
         }
-        return BookingMapper.toBookingDto(booking);
+        return booking;
     }
 
     @Override
-    public BookingDto getBookingInformation(long userId, long bookingId) {
+    public Booking getBookingInformation(long userId, long bookingId) {
+        log.info("get Booking information");
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
         });
@@ -94,12 +98,13 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Вещь не найдена");
         });
         if (booking.getBooker().getId() == userId || item.getOwner().getId() == userId) {
-            return BookingMapper.toBookingDto(booking);
+            return booking;
         } else throw new NotFoundException("Нельзя получить информацию");
     }
 
     @Override
-    public List<BookingDto> getByBooker(long userId, String state) {
+    public List<Booking> getByBooker(long userId, String state) {
+        log.info("get By Booker");
         userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("Пользователь не найден");
         });
@@ -124,16 +129,15 @@ public class BookingServiceImpl implements BookingService {
                 books.addAll(bookingRepository.findByBookerAndState(userId, Status.REJECTED));
                 break;
             default:
-                throw new FailException("Неправильный state");
+                throw new UnsupportedStateException("Неправильный state");
         }
-        return books.stream()
-                .map(BookingMapper::toBookingDto)
-                .collect(Collectors.toList());
+        return books;
     }
 
 
     @Override
-    public List<BookingDto> getByOwner(long userId, String state) {
+    public List<Booking> getByOwner(long userId, String state) {
+        log.info("get by owner");
         userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("Пользователь не найден");
         });
@@ -158,10 +162,8 @@ public class BookingServiceImpl implements BookingService {
                 books.addAll(bookingRepository.findByOwnerAndState(userId, Status.REJECTED));
                 break;
             default:
-                throw new FailException("Неправильный state");
+                throw new UnsupportedStateException("Неправильный state");
         }
-        return books.stream()
-                .map(BookingMapper::toBookingDto)
-                .collect(Collectors.toList());
+        return books;
     }
 }

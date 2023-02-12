@@ -31,3 +31,16 @@ CREATE TABLE IF NOT EXISTS BOOKINGS(
     FOREIGN KEY(bookerId)
     REFERENCES users(id)
 );
+CREATE TABLE IF NOT EXISTS COMMENTS
+(
+    id    BIGINT AUTO_INCREMENT primary key,
+    text     VARCHAR not null,
+    item_id   BIGINT  not null,
+    author_id BIGINT  not null,
+    CONSTRAINT fk_item_comment
+        FOREIGN KEY (item_id)
+            REFERENCES items (id),
+    CONSTRAINT fk_author
+        FOREIGN KEY (author_id)
+            REFERENCES users (id)
+);

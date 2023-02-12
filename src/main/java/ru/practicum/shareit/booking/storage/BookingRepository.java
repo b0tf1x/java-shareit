@@ -8,9 +8,13 @@ import ru.practicum.shareit.booking.model.Booking;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
+    @Query("SELECT b FROM Booking b " +
+            "where b.booker.id = ?1 " +
+            "ORDER BY b.start desc")
     List<Booking> findAllByBookerOrderByStartDesc(long userId);
 
     @Query("SELECT b FROM Booking b " +
@@ -41,30 +45,42 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b from Booking b " +
             "where b.item.owner.id = ?1 " +
             "and b.end > ?2 " +
-            "and b.start > ?2 " +
+            "and b.start < ?2 " +
             "order by b.start")
     List<Booking> getByOwnerCurrent(long userId, LocalDateTime currentTime);
 
     @Query("SELECT b from Booking b " +
             "where b.item.owner.id = ?1 " +
             "and b.end < ?2 " +
-            "order by b.start")
+            "order by b.start desc")
     List<Booking> getByOwnerPast(long userId, LocalDateTime currentTime);
 
     @Query("SELECT b from Booking b " +
             "where b.item.owner.id = ?1 " +
             "AND b.start > ?2 " +
-            "ORDER BY b.start")
+            "ORDER BY b.start desc")
     List<Booking> getByOwnerFuture(long userId, LocalDateTime currentTime);
 
     @Query("SELECT b from Booking b " +
             "where b.item.owner.id = ?1 " +
-            "order by b.start")
+            "order by b.start desc")
     List<Booking> getByOwner(long userId);
 
     @Query("SELECT b from Booking b " +
             "where b.item.owner.id = ?1 " +
             "AND b.status = ?2 " +
-            "order by b.start")
+            "order by b.start desc")
     List<Booking> findByOwnerAndState(long userId, Status status);
+    @Query("select distinct b from Booking b " +
+            "where b.end < ?2 " +
+            "and b.item.id = ?1 " +
+            "order by b.start desc ")
+    Optional<Booking> findLastBooking(long itemId, LocalDateTime now);
+
+    @Query("select distinct b from Booking b " +
+            "where b.start > ?2 " +
+            "and b.item.id = ?1 " +
+            "order by b.start ")
+    Optional<Booking> findNextBooking(long itemId, LocalDateTime now);
+    Optional<Booking> findByBookerIdAndItemIdAndEndBefore(long bookerId, long itemId, LocalDateTime end);
 }
