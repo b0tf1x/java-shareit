@@ -35,7 +35,7 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemBooking findItemById(@RequestHeader(userHeader) long userId, @PathVariable long itemId) {
-        return itemService.findItemById(userId,itemId);
+        return itemService.findItemById(userId, itemId);
     }
 
     @PostMapping
@@ -53,6 +53,7 @@ public class ItemController {
     public List<ItemDto> search(@RequestParam String text) {
         return itemService.search(text);
     }
+
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@RequestHeader(userHeader) long userId,
                                  @PathVariable long itemId,

@@ -27,6 +27,7 @@ public class ExceptionsHandler {
     public ErrorResponse handlerFailException(final FailException exception) {
         return new ErrorResponse("400", exception.getMessage());
     }
+
     @ExceptionHandler(UnsupportedStateException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handlerUnsupportedStateException(final UnsupportedStateException exception) {

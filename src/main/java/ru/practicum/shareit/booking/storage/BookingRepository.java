@@ -71,6 +71,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.status = ?2 " +
             "order by b.start desc")
     List<Booking> findByOwnerAndState(long userId, Status status);
+
     @Query("select distinct b from Booking b " +
             "where b.end < ?2 " +
             "and b.item.id = ?1 " +
@@ -82,5 +83,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "and b.item.id = ?1 " +
             "order by b.start ")
     Optional<Booking> findNextBooking(long itemId, LocalDateTime now);
+
     Optional<Booking> findByBookerIdAndItemIdAndEndBefore(long bookerId, long itemId, LocalDateTime end);
 }

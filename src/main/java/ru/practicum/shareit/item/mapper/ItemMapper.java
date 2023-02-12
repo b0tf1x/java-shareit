@@ -24,6 +24,7 @@ public class ItemMapper {
                 itemDto.getAvailable(),
                 user);
     }
+
     public static ItemBooking toItemBooking(Item item) {
         return new ItemBooking(item.getId(),
                 item.getName(),

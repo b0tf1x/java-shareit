@@ -7,11 +7,12 @@ import ru.practicum.shareit.user.Create;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentDto {
-private Long id;
+    private Long id;
     @NotNull(groups = Create.class)
     @NotBlank(groups = Create.class)
     private String text;

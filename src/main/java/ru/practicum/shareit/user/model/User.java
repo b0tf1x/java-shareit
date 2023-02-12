@@ -23,6 +23,7 @@ public class User {
     private String name;
     @Column(unique = true)
     private String email;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
