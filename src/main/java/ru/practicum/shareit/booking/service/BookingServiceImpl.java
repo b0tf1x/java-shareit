@@ -16,7 +16,6 @@ import ru.practicum.shareit.exception.UnsupportedStateException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.time.LocalDateTime;
@@ -31,19 +30,13 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
-    private final UserService userService;
 
     @Override
     @Transactional
     public Booking create(long userId, BookingDto bookingDto) {
-        log.info("create");
-        log.info("item = " + bookingDto.getItemId());
         Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
         });
-        log.info("ownerId = " + item.getOwner());
-        log.info("available = " + item.getAvailable());
-        log.info("start = " + bookingDto.getStart() + " end = " + bookingDto.getEnd());
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("Не тот пользователь");
         });
@@ -57,10 +50,10 @@ public class BookingServiceImpl implements BookingService {
             throw new FailException("Конец брони до её начала");
         }
         bookingDto.setStatus(Status.WAITING);
-        log.info("id = " + bookingDto.getId());
         Booking booking = bookingRepository.save(BookingMapper.toBooking(bookingDto, item, user));
-        log.info("bookingId = " + booking.getId());
         log.info(booking.toString());
+        log.info("bookerId = " + booking.getBooker().getId() + " bookingId = " + booking.getId());
+        log.info("itemId  = " + item.getId());
         return booking;
     }
 
@@ -83,7 +76,8 @@ public class BookingServiceImpl implements BookingService {
         } else {
             booking.setStatus(Status.REJECTED);
         }
-        return booking;
+
+        return bookingRepository.save(booking);
     }
 
     @Override
@@ -92,9 +86,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
         });
-        Item item = itemRepository.findById(booking.getItem().getId()).orElseThrow(() -> {
-            throw new NotFoundException("Вещь не найдена");
-        });
+        Item item = booking.getItem();
         if (booking.getBooker().getId() == userId || item.getOwner().getId() == userId) {
             return booking;
         } else throw new NotFoundException("Нельзя получить информацию");

@@ -46,7 +46,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> {
             throw new NotFoundException("Вещь не найдена");
         });
-        return setComments(setBookings(userId, item), userId);
+        return setComments(setBookings(userId, item), itemId);
     }
 
     @Override

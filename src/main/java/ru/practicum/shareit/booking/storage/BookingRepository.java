@@ -65,7 +65,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where b.item.owner.id = ?1 " +
             "order by b.start desc")
     List<Booking> getByOwner(long userId);
-
     @Query("SELECT b from Booking b " +
             "where b.item.owner.id = ?1 " +
             "AND b.status = ?2 " +
