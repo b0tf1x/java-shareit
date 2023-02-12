@@ -1,7 +1,3 @@
-drop table if exists USERS;
-drop table if exists BOOKINGS;
-drop table if exists ITEMS;
-drop table if exists COMMENTS;
 CREATE TABLE IF NOT EXISTS USERS (
     id BIGINT AUTO_INCREMENT primary key,
     name VARCHAR(255) NOT NULL,
