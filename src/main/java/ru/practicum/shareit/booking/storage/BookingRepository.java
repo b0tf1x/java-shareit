@@ -75,14 +75,16 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select distinct b from Booking b " +
             "where b.end < ?2 " +
             "and b.item.id = ?1 " +
-            "order by b.start desc ")
-    Optional<Booking> findLastBooking(long itemId, LocalDateTime now);
+            "and b.item.owner.id = ?3 " +
+            "order by b.start desc")
+    Optional<Booking> findLastBooking(long itemId, LocalDateTime now, long userId);
 
     @Query("select distinct b from Booking b " +
             "where b.start > ?2 " +
             "and b.item.id = ?1 " +
+            "and b.item.owner.id = ?3 " +
             "order by b.start ")
-    Optional<Booking> findNextBooking(long itemId, LocalDateTime now);
+    Optional<Booking> findNextBooking(long itemId, LocalDateTime now, long userId);
 
     Optional<Booking> findByBookerIdAndItemIdAndEndBefore(long bookerId, long itemId, LocalDateTime end);
 }

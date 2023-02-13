@@ -98,11 +98,11 @@ public class ItemServiceImpl implements ItemService {
         if (item.getOwner().getId() == userId) {
             itemBooking.setLastBooking(
                     bookingRepository.findLastBooking(
-                            itemBooking.getId(), LocalDateTime.now()
+                            itemBooking.getId(), LocalDateTime.now(),userId
                     ).map(BookingMapper::toBookingDto).orElse(null));
             itemBooking.setNextBooking(
                     bookingRepository.findNextBooking(
-                            itemBooking.getId(), LocalDateTime.now()
+                            itemBooking.getId(), LocalDateTime.now(),userId
                     ).map(BookingMapper::toBookingDto).orElse(null));
         } else {
             itemBooking.setLastBooking(null);
