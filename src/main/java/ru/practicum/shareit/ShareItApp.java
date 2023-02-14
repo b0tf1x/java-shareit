@@ -10,7 +10,6 @@ public class ShareItApp {
 
     public static void main(String[] args) {
         SpringApplication.run(ShareItApp.class, args);
-        log.info("Проходит тесты постман, почему-то падает в гите");
     }
 
 }
