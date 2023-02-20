@@ -21,4 +21,16 @@ public class ExceptionsHandler {
     public ErrorResponse handlerNotFoundException(final NotFoundException exception) {
         return new ErrorResponse("404", exception.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handlerFailException(final FailException exception) {
+        return new ErrorResponse("400", exception.getMessage());
+    }
+
+    @ExceptionHandler(UnsupportedStateException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handlerUnsupportedStateException(final UnsupportedStateException exception) {
+        return new ErrorResponse("Unknown state: UNSUPPORTED_STATUS", exception.getMessage());
+    }
 }

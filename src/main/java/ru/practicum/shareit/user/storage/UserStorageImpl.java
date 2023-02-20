@@ -1,8 +1,7 @@
-package ru.practicum.shareit.user.storage;
+/**package ru.practicum.shareit.user.storage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Repository
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserStorageImpl implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
@@ -72,4 +70,4 @@ public class UserStorageImpl implements UserStorage {
         emails.remove(users.get(userId).getEmail());
         users.remove(userId);
     }
-}
+}**/

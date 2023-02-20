@@ -3,7 +3,6 @@ package ru.practicum.shareit.item.storage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -16,7 +15,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Repository
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ItemStorageImpl implements ItemStorage {
     private final Map<Long, List<Item>> items = new HashMap<>();
@@ -32,18 +30,19 @@ public class ItemStorageImpl implements ItemStorage {
     public ItemDto findItemById(long itemId) {
         List<Item> itemsList = new ArrayList<>();
         items.forEach((user, items1) -> itemsList.addAll(items1));
-        return itemsList.stream().filter(item1 -> item1.getId() == itemId).findFirst().map(ItemMapper::toItemDto).orElse(new ItemDto());
+        return itemsList.stream()
+                .filter(item1 -> item1.getId() == itemId)
+                .findFirst().map(ItemMapper::toItemDto)
+                .orElse(new ItemDto());
     }
 
     @Override
     public ItemDto create(long userId, ItemDto itemDto) {
         itemDto.setId(currentId++);
-        Item item = ItemMapper.toItem(itemDto, userId);
         List<Item> userItems = items.get(userId);
         if (userItems == null) {
             userItems = new ArrayList<>();
         }
-        userItems.add(item);
         items.put(userId, userItems);
         log.info("Предмет успешно создан");
         return itemDto;
