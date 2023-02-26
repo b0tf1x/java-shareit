@@ -34,13 +34,16 @@ public class ItemRepositoryTest {
 
     @BeforeEach
     void start() {
+        itemRepository.deleteAll();
+        userRepository.deleteAll();
+        itemRequestRepository.deleteAll();
         LocalDateTime now = LocalDateTime.now();
         user1 = new User(1L, "name1", "email1@mail.com");
         user1 = userRepository.save(user1);
         user2 = new User(2L, "name1", "email2@mail.com");
         user2 = userRepository.save(user2);
         itemRequest = new ItemRequest(1L, "description", user1, now);
-        itemRequestRepository.save(itemRequest);
+        itemRequest = itemRequestRepository.save(itemRequest);
         item = new Item(1L, "name", "description", true, user1, itemRequest);
         itemRepository.save(item);
     }
@@ -61,5 +64,14 @@ public class ItemRepositoryTest {
         assertEquals(items2.get(0).getOwner(), items1.get(0).getOwner());
         assertEquals(items2.get(0).getDescription(), items1.get(0).getDescription());
     }
-    
+
+    @Test
+    void search() {
+        String text = "name";
+        List<Item> items = itemRepository.search(text);
+        assertEquals(1, items.size());
+        assertEquals(1, items.get(0).getId());
+        assertEquals("name", items.get(0).getName());
+    }
+
 }
