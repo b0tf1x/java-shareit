@@ -19,10 +19,10 @@ import java.time.LocalDateTime;
 public class ItemRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String description;
     @ManyToOne
-    @JoinColumn(name = "requestor")
+    @JoinColumn(name = "requestorId")
     private User requestor;
     private LocalDateTime created;
 }

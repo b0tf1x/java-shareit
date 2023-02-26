@@ -17,8 +17,11 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.user.Create;
 
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -47,13 +50,17 @@ public class BookingController {
 
     @GetMapping
     public List<Booking> getByBooker(@RequestHeader(userHeader) long userId,
-                                     @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.getByBooker(userId, state);
+                                     @RequestParam(defaultValue = "ALL") String state,
+                                     @PositiveOrZero @RequestParam(defaultValue = "0", required = false) int from,
+                                     @Positive @RequestParam(defaultValue = "10", required = false) int size) {
+        return bookingService.getByBooker(userId, state, from, size);
     }
 
     @GetMapping("/owner")
     public List<Booking> getByOwner(@RequestHeader(userHeader) long userId,
-                                    @RequestParam(defaultValue = "ALL") String state) {
-        return bookingService.getByOwner(userId, state);
+                                    @RequestParam(defaultValue = "ALL") String state,
+                                    @PositiveOrZero @RequestParam(defaultValue = "0", required = false) int from,
+                                    @Positive @RequestParam(defaultValue = "10", required = false) int size) {
+        return bookingService.getByOwner(userId, state, from, size);
     }
 }

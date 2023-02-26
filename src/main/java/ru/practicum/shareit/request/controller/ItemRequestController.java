@@ -17,7 +17,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping(path = "/requests")
-@RequiredArgsConstructor(onConstructor = @Autowired)
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ItemRequestController {
     private final ItemRequestService itemRequestService;
     private static final String userHeader = "X-Sharer-User-Id";
@@ -42,7 +42,7 @@ public class ItemRequestController {
     @GetMapping("/all")
     public List<ItemRequestDto> getAllRequests(@RequestHeader(userHeader) long userId,
                                                @PositiveOrZero @RequestParam(defaultValue = "0", required = false) int from,
-                                               @Positive @RequestParam int size) {
+                                               @Positive @RequestParam(defaultValue = "10", required = false) int size) {
         return itemRequestService.getAllRequests(userId, from, size);
     }
 }

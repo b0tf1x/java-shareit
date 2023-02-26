@@ -10,12 +10,16 @@ import java.util.ArrayList;
 
 public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
+        Long request = null;
+        if (item.getItemRequest()!= null){
+            request = item.getItemRequest().getId();
+        }
         return new ItemDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                item.getItemRequest().getId()
+                request
         );
     }
 
