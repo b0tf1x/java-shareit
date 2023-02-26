@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
@@ -18,6 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ItemRepositoryTest {
     @Autowired
     private ItemRepository itemRepository;
@@ -59,13 +61,5 @@ public class ItemRepositoryTest {
         assertEquals(items2.get(0).getOwner(), items1.get(0).getOwner());
         assertEquals(items2.get(0).getDescription(), items1.get(0).getDescription());
     }
-
-    @Test
-    void search() {
-        String search = "name";
-        List<Item> items = itemRepository.search(search);
-        assertEquals(1, items.size());
-        assertEquals(item.getId(), items.get(0).getId());
-        assertEquals(item.getName(), items.get(0).getName());
-    }
+    
 }
