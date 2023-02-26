@@ -29,39 +29,43 @@ public class ItemRepositoryTest {
     private User user2;
     private Item item;
     private ItemRequest itemRequest;
+
     @BeforeEach
-    void start(){
+    void start() {
         LocalDateTime now = LocalDateTime.now();
-        user1 = new User(1L,"name1","email1@mail.com");
+        user1 = new User(1L, "name1", "email1@mail.com");
         user1 = userRepository.save(user1);
-        user2 = new User(2L,"name1","email2@mail.com");
+        user2 = new User(2L, "name1", "email2@mail.com");
         user2 = userRepository.save(user2);
-        itemRequest = new ItemRequest(1L,"description",user1,now);
+        itemRequest = new ItemRequest(1L, "description", user1, now);
         itemRequestRepository.save(itemRequest);
-        item = new Item(1L,"name","description",true,user1,itemRequest);
+        item = new Item(1L, "name", "description", true, user1, itemRequest);
         itemRepository.save(item);
     }
+
     @AfterEach
-    void delete(){
+    void delete() {
         itemRepository.deleteAll();
         userRepository.deleteAll();
         itemRequestRepository.deleteAll();
     }
+
     @Test
-    void findAllByOwnerIdOrderByIdAsc(){
-        List<Item>items1 = itemRepository.findAllByOwnerIdOrderByIdAsc(user1.getId());
-        List<Item>items2 = new ArrayList<>();
+    void findAllByOwnerIdOrderByIdAsc() {
+        List<Item> items1 = itemRepository.findAllByOwnerIdOrderByIdAsc(user1.getId());
+        List<Item> items2 = new ArrayList<>();
         items2.add(item);
-        assertEquals(items2.get(0).getId(),items1.get(0).getId());
-        assertEquals(items2.get(0).getOwner(),items1.get(0).getOwner());
-        assertEquals(items2.get(0).getDescription(),items1.get(0).getDescription());
+        assertEquals(items2.get(0).getId(), items1.get(0).getId());
+        assertEquals(items2.get(0).getOwner(), items1.get(0).getOwner());
+        assertEquals(items2.get(0).getDescription(), items1.get(0).getDescription());
     }
+
     @Test
-    void search(){
+    void search() {
         String search = "name";
-        List<Item>items = itemRepository.search(search);
-        assertEquals(1,items.size());
-        assertEquals(item.getId(),items.get(0).getId());
-        assertEquals(item.getName(),items.get(0).getName());
+        List<Item> items = itemRepository.search(search);
+        assertEquals(1, items.size());
+        assertEquals(item.getId(), items.get(0).getId());
+        assertEquals(item.getName(), items.get(0).getName());
     }
 }

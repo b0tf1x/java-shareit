@@ -22,22 +22,25 @@ public class RequestRepositoryTest {
     private UserRepository userRepository;
     private User user;
     private ItemRequest itemRequest;
+
     @BeforeEach
-    void start(){
+    void start() {
         LocalDateTime now = LocalDateTime.now();
-        user = new User(1L,"name","email@mail.com");
+        user = new User(1L, "name", "email@mail.com");
         user = userRepository.save(user);
-        itemRequest = new ItemRequest(1L,"description",user,now);
+        itemRequest = new ItemRequest(1L, "description", user, now);
         itemRequest = itemRequestRepository.save(itemRequest);
     }
+
     @AfterEach
-    void delete(){
+    void delete() {
         userRepository.deleteAll();
         itemRequestRepository.deleteAll();
     }
+
     @Test
-    void findByRequestsIds(){
+    void findByRequestsIds() {
         List<ItemRequest> itemRequestList = itemRequestRepository.findAllByRequestorId(user.getId());
-        assertEquals(List.of(itemRequest),itemRequestList);
+        assertEquals(List.of(itemRequest), itemRequestList);
     }
 }
