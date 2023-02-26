@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
         Long request = null;
-        if (item.getItemRequest()!= null){
+        if (item.getItemRequest() != null) {
             request = item.getItemRequest().getId();
         }
         return new ItemDto(
