@@ -28,7 +28,7 @@ public class UserDtoTest {
     void testJson() throws Exception {
         JsonContent<UserDto> json = jacksonTester.write(userDto);
         assertThat(json).extractingJsonPathNumberValue(
-                "$.id").isEqualTo(userDto.getId());
+                "$.id").isEqualTo(Math.toIntExact(userDto.getId()));
         assertThat(json).extractingJsonPathStringValue(
                 "$.name").isEqualTo(userDto.getName());
         assertThat(json).extractingJsonPathStringValue(
