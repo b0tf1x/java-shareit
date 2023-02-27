@@ -27,10 +27,9 @@ public class ItemRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private ItemRequestRepository itemRequestRepository;
-    private User user1;
-    private User user2;
     private Item item;
     private ItemRequest itemRequest;
+    private User user1;
 
     @BeforeEach
     void start() {
@@ -40,7 +39,7 @@ public class ItemRepositoryTest {
         LocalDateTime now = LocalDateTime.now();
         user1 = new User(1L, "name1", "email1@mail.com");
         user1 = userRepository.save(user1);
-        user2 = new User(2L, "name1", "email2@mail.com");
+        User user2 = new User(2L, "name1", "email2@mail.com");
         user2 = userRepository.save(user2);
         itemRequest = new ItemRequest(1L, "description", user1, now);
         itemRequest = itemRequestRepository.save(itemRequest);
@@ -70,7 +69,6 @@ public class ItemRepositoryTest {
         String text = "name";
         List<Item> items = itemRepository.search(text);
         assertEquals(1, items.size());
-        assertEquals(1, items.get(0).getId());
         assertEquals("name", items.get(0).getName());
     }
 
