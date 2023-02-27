@@ -13,6 +13,7 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.FailException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.UnsupportedStateException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -144,6 +145,87 @@ public class BookingServiceImplTest {
         assertEquals(user2, bookingList.get(0).getBooker());
         assertEquals(Status.WAITING, bookingList.get(0).getStatus());
     }
+    @Test
+    void getByBookerCurrent(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.findByBookerCurrent(anyLong(), any(LocalDateTime.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByBooker(user1.getId(), "CURRENT", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByBookerPast(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.findByBookerPast(anyLong(), any(LocalDateTime.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByBooker(user1.getId(), "PAST", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByBookerFuture(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.findByBookerFuture(anyLong(), any(LocalDateTime.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByBooker(user1.getId(), "FUTURE", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByBookerWaiting(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.findByBookerAndState(anyLong(), any(Status.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByBooker(user1.getId(), "WAITING", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByBookerRejected(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.findByBookerAndState(anyLong(), any(Status.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByBooker(user1.getId(), "REJECTED", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByBookerWrongState(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        assertThrows(UnsupportedStateException.class,()->bookingService.getByBooker(user1.getId(),"wrong",0,10));
+    }
 
     @Test
     void getBookingInformationWrongBooking() {
@@ -169,6 +251,81 @@ public class BookingServiceImplTest {
         when(bookingRepository.getByOwner(anyLong(), any(PageRequest.class)))
                 .thenReturn(List.of(booking));
         List<Booking> bookingList = bookingService.getByOwner(user1.getId(), "ALL", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByOwnerCurrent(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.getByOwnerCurrent(anyLong(), any(LocalDateTime.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByOwner(user1.getId(), "CURRENT", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByOwnerPast(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.getByOwnerPast(anyLong(), any(LocalDateTime.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByOwner(user1.getId(), "PAST", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByOwnerFuture(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.getByOwnerFuture(anyLong(), any(LocalDateTime.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByOwner(user1.getId(), "FUTURE", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByOwnerWaiting(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.findByOwnerAndState(anyLong(), any(Status.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByOwner(user1.getId(), "WAITING", 0, 10);
+        assertEquals(1, bookingList.size());
+        assertEquals(1, bookingList.get(0).getId());
+        assertEquals(start, bookingList.get(0).getStart());
+        assertEquals(end, bookingList.get(0).getEnd());
+        assertEquals(item, bookingList.get(0).getItem());
+        assertEquals(user2, bookingList.get(0).getBooker());
+        assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+    @Test
+    void getByOwnerRejected(){
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(bookingRepository.findByOwnerAndState(anyLong(), any(Status.class), any(PageRequest.class)))
+                .thenReturn(List.of(booking));
+        List<Booking> bookingList = bookingService.getByOwner(user1.getId(), "REJECTED", 0, 10);
         assertEquals(1, bookingList.size());
         assertEquals(1, bookingList.get(0).getId());
         assertEquals(start, bookingList.get(0).getStart());
