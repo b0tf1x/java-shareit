@@ -227,6 +227,13 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void getByBookerWrongUser() {
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> bookingService.getByBooker(user1.getId(), "WAITING", 0, 10));
+    }
+
+    @Test
     void getByBookerWrongState() {
         when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(user1));
@@ -344,5 +351,20 @@ public class BookingServiceImplTest {
         assertEquals(item, bookingList.get(0).getItem());
         assertEquals(user2, bookingList.get(0).getBooker());
         assertEquals(Status.WAITING, bookingList.get(0).getStatus());
+    }
+
+    @Test
+    void geyByOwnerWrongState() {
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        assertThrows(UnsupportedStateException.class, () -> bookingService.getByOwner(user1.getId(), "wrong", 0, 10));
+    }
+
+    @Test
+    void getByOwnerWrongUser() {
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> bookingService.getByOwner(user1.getId(), "WAITING", 0, 10));
+
     }
 }
