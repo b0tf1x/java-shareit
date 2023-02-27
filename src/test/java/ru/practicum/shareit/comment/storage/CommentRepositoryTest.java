@@ -29,6 +29,9 @@ public class CommentRepositoryTest {
 
     @BeforeEach
     void start() {
+        itemRepository.deleteAll();
+        userRepository.deleteAll();
+        commentRepository.deleteAll();
         User user1 = userRepository.save(new User(1L, "name1", "email1@mail.com"));
         User user2 = userRepository.save(new User(2L, "name2", "email2@mail.com"));
         item = new Item(1L, "name", "description", true, user1, null);
