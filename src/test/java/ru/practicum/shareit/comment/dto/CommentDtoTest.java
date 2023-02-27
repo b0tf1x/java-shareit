@@ -1,6 +1,5 @@
 package ru.practicum.shareit.comment.dto;
 
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,6 @@ import ru.practicum.shareit.comment.CommentDto;
 import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,15 +25,16 @@ public class CommentDtoTest {
     private Item item;
 
     @BeforeEach
-    void start(){
-        user1 = new User(1L,"name1","email1@mail.com");
-        user2 = new User(1L,"name2","email2@mail.com");
-        item = new Item(1L,"name","description",true,user1,null);
-        comment = new Comment(1L,"text",item,user2);
+    void start() {
+        user1 = new User(1L, "name1", "email1@mail.com");
+        user2 = new User(1L, "name2", "email2@mail.com");
+        item = new Item(1L, "name", "description", true, user1, null);
+        comment = new Comment(1L, "text", item, user2);
         commentDto = CommentMapper.toCommentDto(comment);
     }
+
     @Test
-    void testJson() throws Exception{
+    void testJson() throws Exception {
         JsonContent<CommentDto> json = jacksonTester.write(commentDto);
         assertThat(json).extractingJsonPathNumberValue("$.id").isEqualTo(Math.toIntExact(commentDto.getId()));
         assertThat(json).extractingJsonPathStringValue("$.text")
