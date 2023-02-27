@@ -67,7 +67,7 @@ public class ItemRequestServiceImplTest {
     @Test
     void createWrongUser() {
         when(userRepository.findById(anyLong()))
-                .thenThrow(NotFoundException.class);
+                .thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> itemRequestService.create(1L, itemRequestDto));
     }
 
@@ -82,7 +82,7 @@ public class ItemRequestServiceImplTest {
     @Test
     void getRequestsInformationWrongUser() {
         when(userRepository.findById(anyLong()))
-                .thenThrow(NotFoundException.class);
+                .thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> itemRequestService.getRequestsInformation(1L));
     }
 
@@ -91,14 +91,14 @@ public class ItemRequestServiceImplTest {
         when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(user));
         when(itemRequestRepository.findById(anyLong()))
-                .thenThrow(NotFoundException.class);
+                .thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> itemRequestService.getRequestInformation(user.getId(), 1L));
     }
 
     @Test
     void getRequestInformationWrongUser() {
         when(userRepository.findById(anyLong()))
-                .thenThrow(NotFoundException.class);
+                .thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> itemRequestService.getRequestInformation(user.getId(), 1L));
     }
 
