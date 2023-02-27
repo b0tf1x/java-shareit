@@ -9,13 +9,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import ru.practicum.shareit.booking.dto.Status;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.comment.Comment;
 import ru.practicum.shareit.comment.CommentDto;
 import ru.practicum.shareit.comment.CommentMapper;
 import ru.practicum.shareit.comment.CommentRepository;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.item.dto.ItemBooking;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
@@ -112,6 +112,27 @@ public class ItemServiceImplTest {
         assertEquals(true, itemDto.getAvailable());
         assertNull(itemDto.getRequestId());
     }
+
+    @Test
+    void createWrongUser() {
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () ->
+                itemService.create(user1.getId(), ItemMapper.toItemDto(item)));
+    }
+
+    @Test
+    void createWrongRequest() {
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(user1));
+        when(itemRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(item));
+        ItemDto itemDto = ItemMapper.toItemDto(item);
+        itemDto.setRequestId(0L);
+        assertThrows(NotFoundException.class, () ->
+                itemService.create(user1.getId(), itemDto));
+    }
+
 
     @Test
     void put() {
