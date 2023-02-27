@@ -94,6 +94,12 @@ public class ItemRequestServiceImplTest {
                 .thenThrow(NotFoundException.class);
         assertThrows(NotFoundException.class, () -> itemRequestService.getRequestInformation(user.getId(), 1L));
     }
+    @Test
+    void getRequestInformationWrongUser() {
+        when(userRepository.findById(anyLong()))
+                .thenThrow(NotFoundException.class);
+        assertThrows(NotFoundException.class, () -> itemRequestService.getRequestInformation(user.getId(), 1L));
+    }
 
     @Test
     void getRequestInformation() {
