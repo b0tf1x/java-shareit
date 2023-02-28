@@ -105,6 +105,24 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    void createNotFoundItem() {
+        when(itemRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () ->
+                bookingService.create(user1.getId(), BookingMapper.toBookingDto(booking)));
+    }
+
+    @Test
+    void createNotFoundUser() {
+        when(itemRepository.findById(anyLong()))
+                .thenReturn(Optional.ofNullable(item));
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () ->
+                bookingService.create(user1.getId(), BookingMapper.toBookingDto(booking)));
+    }
+
+    @Test
     void updateStatusWrongUser() {
         when(bookingRepository.findById(anyLong()))
                 .thenReturn(Optional.ofNullable(booking));
