@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.Variables.USER_HEADER;
 
 @AutoConfigureMockMvc
 @WebMvcTest(ItemController.class)
@@ -47,7 +48,6 @@ public class ItemControllerTest {
     private ItemDto itemDto;
     private ItemBooking itemBooking;
     private CommentDto commentDto;
-    private static final String userHeader = "X-Sharer-User-Id";
 
     @BeforeEach
     void start() {
@@ -67,7 +67,7 @@ public class ItemControllerTest {
         when(itemService.findAll(anyLong()))
                 .thenReturn(List.of(itemBooking));
         mockMvc.perform(get("/items")
-                        .header(userHeader, userDto1.getId()))
+                        .header(USER_HEADER, userDto1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(itemBooking))));
     }
@@ -77,7 +77,7 @@ public class ItemControllerTest {
         when(itemService.findItemById(anyLong(), anyLong()))
                 .thenReturn(itemBooking);
         mockMvc.perform(get("/items/1")
-                        .header(userHeader, userDto1.getId()))
+                        .header(USER_HEADER, userDto1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(itemBooking)));
     }
@@ -89,7 +89,7 @@ public class ItemControllerTest {
         mockMvc.perform(post("/items")
                         .content(objectMapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(userHeader, userDto1.getId()))
+                        .header(USER_HEADER, userDto1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(itemDto)));
     }
@@ -101,7 +101,7 @@ public class ItemControllerTest {
         mockMvc.perform(patch("/items/1")
                         .content(objectMapper.writeValueAsString(itemDto))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(userHeader, userDto1.getId()))
+                        .header(USER_HEADER, userDto1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(itemDto)));
     }
@@ -112,7 +112,7 @@ public class ItemControllerTest {
                 .thenReturn(List.of(itemDto));
         mockMvc.perform(get("/items/search")
                         .param("text", "Item1")
-                        .header(userHeader, userDto1.getId()))
+                        .header(USER_HEADER, userDto1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(itemDto))));
     }
@@ -124,7 +124,7 @@ public class ItemControllerTest {
         mockMvc.perform(post("/items/1/comment")
                         .content(objectMapper.writeValueAsString(commentDto))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(userHeader, userDto1.getId()))
+                        .header(USER_HEADER, userDto1.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(commentDto)));
     }

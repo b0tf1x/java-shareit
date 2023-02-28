@@ -9,7 +9,6 @@ import ru.practicum.shareit.comment.CommentDto;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class ItemBooking {
     private long id;

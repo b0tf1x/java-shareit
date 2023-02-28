@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.item.storage.dto.ItemRequestDto;
 import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.service.ItemRequestService;
@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.Variables.USER_HEADER;
 
 @WebMvcTest(ItemRequestController.class)
 @AutoConfigureMockMvc
@@ -38,7 +39,6 @@ public class ItemRequestControllerTest {
     private ItemRequestService itemRequestService;
     private User user;
     private ItemRequestDto itemRequestDto;
-    private static final String userHeader = "X-Sharer-User-Id";
 
     @BeforeEach
     void start() throws Exception {
@@ -53,7 +53,7 @@ public class ItemRequestControllerTest {
         mockMvc.perform(post("/requests")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(userHeader, 1L)
+                        .header(USER_HEADER, 1L)
                         .content(objectMapper.writeValueAsString(itemRequestDto)))
                 .andExpect(status().isOk());
     }
@@ -66,7 +66,7 @@ public class ItemRequestControllerTest {
         mockMvc.perform(get("/requests")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(userHeader, 1L))
+                        .header(USER_HEADER, 1L))
                 .andExpect(status().isOk());
     }
 
@@ -77,7 +77,7 @@ public class ItemRequestControllerTest {
         mockMvc.perform(get("/requests/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(userHeader, 1L))
+                        .header(USER_HEADER, 1L))
                 .andExpect(status().isOk());
     }
 
@@ -88,7 +88,7 @@ public class ItemRequestControllerTest {
         mockMvc.perform(get("/requests/all")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
-                        .header(userHeader, 1L))
+                        .header(USER_HEADER, 1L))
                 .andExpect(status().isOk());
     }
 }

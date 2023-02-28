@@ -21,35 +21,36 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
+import static ru.practicum.shareit.Variables.USER_HEADER;
+
 @Validated
 @RestController
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class BookingController {
     private final BookingService bookingService;
-    private static final String userHeader = "X-Sharer-User-Id";
 
     @PostMapping
-    public Booking create(@RequestHeader(userHeader) long userId,
+    public Booking create(@RequestHeader(USER_HEADER) long userId,
                           @Validated(Create.class) @RequestBody BookingDto bookingDto) {
         return bookingService.create(userId, bookingDto);
     }
 
     @PatchMapping("/{bookingId}")
-    public Booking updateStatus(@RequestHeader(userHeader) long userId,
+    public Booking updateStatus(@RequestHeader(USER_HEADER) long userId,
                                 @PathVariable long bookingId,
                                 @RequestParam boolean approved) {
         return bookingService.updateStatus(userId, bookingId, approved);
     }
 
     @GetMapping("/{bookingId}")
-    public Booking getBookingInformation(@RequestHeader(userHeader) long userId,
+    public Booking getBookingInformation(@RequestHeader(USER_HEADER) long userId,
                                          @PathVariable long bookingId) {
         return bookingService.getBookingInformation(userId, bookingId);
     }
 
     @GetMapping
-    public List<Booking> getByBooker(@RequestHeader(userHeader) long userId,
+    public List<Booking> getByBooker(@RequestHeader(USER_HEADER) long userId,
                                      @RequestParam(defaultValue = "ALL") String state,
                                      @PositiveOrZero @RequestParam(defaultValue = "0", required = false) int from,
                                      @Positive @RequestParam(defaultValue = "10", required = false) int size) {
@@ -57,7 +58,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public List<Booking> getByOwner(@RequestHeader(userHeader) long userId,
+    public List<Booking> getByOwner(@RequestHeader(USER_HEADER) long userId,
                                     @RequestParam(defaultValue = "ALL") String state,
                                     @PositiveOrZero @RequestParam(defaultValue = "0", required = false) int from,
                                     @Positive @RequestParam(defaultValue = "10", required = false) int size) {

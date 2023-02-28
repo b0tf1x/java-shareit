@@ -8,7 +8,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.storage.ItemRepository;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.item.storage.dto.ItemRequestDto;
 import ru.practicum.shareit.request.mapper.ItemRequestMapper;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
@@ -64,7 +64,9 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         ItemRequest itemRequest = itemRequestRepository.findById(request).orElseThrow(() -> {
             throw new NotFoundException("Запрос не найден");
         });
-        List<ItemDto> itemsList = itemRepository.findByItemRequestId(request).stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+        List<ItemDto> itemsList = itemRepository.findByItemRequestId(request).stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
         ItemRequestDto itemRequestDto = ItemRequestMapper.toItemRequestDto(itemRequest);
         itemRequestDto.setItems(itemsList);
         return itemRequestDto;

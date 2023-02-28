@@ -30,6 +30,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.Variables.USER_HEADER;
 
 @WebMvcTest(BookingController.class)
 @AutoConfigureMockMvc
@@ -40,25 +41,19 @@ public class BookingControllerTest {
     private ObjectMapper objectMapper;
     @MockBean
     private BookingService bookingService;
-    private UserDto userDto1;
     private UserDto userDto2;
-    private User user1;
-    private User user2;
     private BookingDto bookingDto;
     private Booking booking;
-    private static final String userHeader = "X-Sharer-User-Id";
-    private Item item;
 
     @BeforeEach
     void start() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime start = now.plusHours(1);
         LocalDateTime end = now.plusHours(2);
-        user1 = new User(1L, "name1", "email1@mail.com");
-        user2 = new User(2L, "name2", "email@mail.com");
-        userDto1 = UserMapper.toUserDto(user1);
+        User user1 = new User(1L, "name1", "email1@mail.com");
+        User user2 = new User(2L, "name2", "email@mail.com");
         userDto2 = UserMapper.toUserDto(user2);
-        item = new Item(1L, "name", "description", true, user1, null);
+        Item item = new Item(1L, "name", "description", true, user1, null);
         booking = new Booking(1L, start, end, user2, item, Status.WAITING);
         bookingDto = BookingMapper.toBookingDto(booking);
     }
@@ -70,7 +65,7 @@ public class BookingControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/bookings")
                         .content(objectMapper.writeValueAsString(bookingDto))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(userHeader, userDto2.getId()))
+                        .header(USER_HEADER, userDto2.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(booking)));
     }
@@ -81,7 +76,7 @@ public class BookingControllerTest {
                 .thenReturn(booking);
         mockMvc.perform(MockMvcRequestBuilders.patch("/bookings/1")
                         .param("approved", "true")
-                        .header(userHeader, userDto2.getId()))
+                        .header(USER_HEADER, userDto2.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(booking)));
     }
@@ -91,7 +86,7 @@ public class BookingControllerTest {
         when(bookingService.getBookingInformation(anyLong(), anyLong()))
                 .thenReturn(booking);
         mockMvc.perform(MockMvcRequestBuilders.get("/bookings/1")
-                        .header(userHeader, userDto2.getId()))
+                        .header(USER_HEADER, userDto2.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(booking)));
     }
@@ -101,7 +96,7 @@ public class BookingControllerTest {
         when(bookingService.getByBooker(anyLong(), any(String.class), anyInt(), anyInt()))
                 .thenReturn(List.of(booking));
         mockMvc.perform(MockMvcRequestBuilders.get("/bookings")
-                        .header(userHeader, userDto2.getId()))
+                        .header(USER_HEADER, userDto2.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(booking))));
     }
@@ -111,7 +106,7 @@ public class BookingControllerTest {
         when(bookingService.getByOwner(anyLong(), any(String.class), anyInt(), anyInt()))
                 .thenReturn(List.of(booking));
         mockMvc.perform(MockMvcRequestBuilders.get("/bookings/owner")
-                        .header(userHeader, userDto2.getId()))
+                        .header(USER_HEADER, userDto2.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(booking))));
     }
