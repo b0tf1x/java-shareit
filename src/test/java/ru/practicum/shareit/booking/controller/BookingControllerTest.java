@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.practicum.shareit.Variables.USER_HEADER;
+import static ru.practicum.shareit.ShareItApp.USER_HEADER;
 
 @WebMvcTest(BookingController.class)
 @AutoConfigureMockMvc
