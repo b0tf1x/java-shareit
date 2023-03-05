@@ -17,4 +17,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "or lower(item.description) like %?1%)")
     List<Item> search(String text);
 
+    @Query("select item from Item item " +
+            "where item.itemRequest.id in ?1 ")
+    List<Item> findByRequestsIds(List<Long> requestsIds);
+
+    List<Item> findByItemRequestId(long requestId);
 }

@@ -20,31 +20,33 @@ import ru.practicum.shareit.user.Create;
 
 import java.util.List;
 
+import static ru.practicum.shareit.ShareItApp.USER_HEADER;
+
+
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
 @Slf4j
 public class ItemController {
-    private static final String userHeader = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemBooking> findAll(@RequestHeader(userHeader) long userId) {
+    public List<ItemBooking> findAll(@RequestHeader(USER_HEADER) long userId) {
         return itemService.findAll(userId);
     }
 
     @GetMapping("/{itemId}")
-    public ItemBooking findItemById(@RequestHeader(userHeader) long userId, @PathVariable long itemId) {
+    public ItemBooking findItemById(@RequestHeader(USER_HEADER) long userId, @PathVariable long itemId) {
         return itemService.findItemById(userId, itemId);
     }
 
     @PostMapping
-    public ItemDto create(@RequestHeader(userHeader) long userId, @Validated(Create.class) @RequestBody ItemDto itemDto) {
+    public ItemDto create(@RequestHeader(USER_HEADER) long userId, @Validated(Create.class) @RequestBody ItemDto itemDto) {
         return itemService.create(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto put(@RequestHeader(userHeader) long userId, @RequestBody ItemDto itemDto,
+    public ItemDto put(@RequestHeader(USER_HEADER) long userId, @RequestBody ItemDto itemDto,
                        @PathVariable long itemId) {
         return itemService.put(userId, itemDto, itemId);
     }
@@ -55,7 +57,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto addComment(@RequestHeader(userHeader) long userId,
+    public CommentDto addComment(@RequestHeader(USER_HEADER) long userId,
                                  @PathVariable long itemId,
                                  @Validated(Create.class) @RequestBody CommentDto commentDto) {
         return itemService.addComment(userId, itemId, commentDto);

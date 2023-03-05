@@ -40,3 +40,12 @@ CREATE TABLE IF NOT EXISTS COMMENTS
         FOREIGN KEY (author_id)
             REFERENCES users (id)
 );
+create table if not exists requests(
+    id bigint auto_increment primary key,
+    requestorId bigint not null,
+    description varchar(256) not null,
+    created timestamp without time zone not null,
+    constraint fk_requestor
+    foreign key (requestorId)
+    references users(id)
+);

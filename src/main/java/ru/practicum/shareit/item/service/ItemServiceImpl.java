@@ -17,6 +17,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -33,6 +35,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public List<ItemBooking> findAll(long userId) {
@@ -55,7 +58,14 @@ public class ItemServiceImpl implements ItemService {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("Пользователь не найден");
         });
-        Item item = itemRepository.save(ItemMapper.toItem(itemDto, user));
+        ItemRequest itemRequest = null;
+        if (itemDto.getRequestId() != null) {
+            itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> {
+                        throw new NotFoundException("Запрос не найден");
+                    });
+        }
+        Item item = itemRepository.save(ItemMapper.toItem(itemDto, user, itemRequest));
         return ItemMapper.toItemDto(item);
     }
 
@@ -98,11 +108,11 @@ public class ItemServiceImpl implements ItemService {
         if (item.getOwner().getId() == userId) {
             itemBooking.setLastBooking(
                     bookingRepository.findLastBooking(
-                            itemBooking.getId(), LocalDateTime.now(),userId
+                            itemBooking.getId(), LocalDateTime.now(), userId
                     ).map(BookingMapper::toBookingDto).orElse(null));
             itemBooking.setNextBooking(
                     bookingRepository.findNextBooking(
-                            itemBooking.getId(), LocalDateTime.now(),userId
+                            itemBooking.getId(), LocalDateTime.now(), userId
                     ).map(BookingMapper::toBookingDto).orElse(null));
         } else {
             itemBooking.setLastBooking(null);
