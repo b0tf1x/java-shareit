@@ -8,5 +8,5 @@ public class ShareItGateway {
 	public static void main(String[] args) {
 		SpringApplication.run(ShareItGateway.class, args);
 	}
-
+	public static final String USER_HEADER = "X-Sharer-User-Id";
 }
