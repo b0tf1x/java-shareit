@@ -19,6 +19,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 @RestController
 @RequestMapping(path = "/users")
+@Validated
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserController {
     private final UserClient userClient;

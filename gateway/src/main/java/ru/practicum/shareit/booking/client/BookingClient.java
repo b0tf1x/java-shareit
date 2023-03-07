@@ -38,7 +38,7 @@ public class BookingClient extends BaseClient {
 
 
     public ResponseEntity<Object> create(long userId, BookingDto bookingDto) {
-        return post("", userId, bookingDto);
+        return post("/", userId, bookingDto);
     }
 
     public ResponseEntity<Object> getBookingInformation(long userId, Long bookingId) {

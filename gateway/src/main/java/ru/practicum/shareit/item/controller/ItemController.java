@@ -51,9 +51,8 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> search(@RequestHeader(USER_HEADER) long userId,
-                                         @RequestParam String search) {
-        return itemClient.search(userId, search);
+    public ResponseEntity<Object> search(@RequestParam String search) {
+        return itemClient.search(search);
     }
 
     @PostMapping("/{itemId}/comment")

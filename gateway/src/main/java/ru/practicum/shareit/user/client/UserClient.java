@@ -25,7 +25,7 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> findAll() {
-        return get("");
+        return get("/");
     }
 
     public ResponseEntity<Object> findUserById(long userId) {
@@ -33,7 +33,7 @@ public class UserClient extends BaseClient {
     }
 
     public ResponseEntity<Object> create(UserDto userDto) {
-        return post("", userDto);
+        return post("/", userDto);
     }
 
     public ResponseEntity<Object> put(long userId, UserDto userDto) {

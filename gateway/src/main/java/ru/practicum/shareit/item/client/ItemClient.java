@@ -28,7 +28,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> findAll(long userId) {
-        return get("/" + userId);
+        return get("/", userId);
     }
 
     public ResponseEntity<Object> findItemById(long userId, long itemId) {
@@ -36,16 +36,16 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> create(long userId, ItemDto itemDto) {
-        return post("", userId, itemDto);
+        return post("/", userId, itemDto);
     }
 
     public ResponseEntity<Object> put(long userId, long itemId, ItemDto itemDto) {
         return patch("/" + itemId, userId, itemDto);
     }
 
-    public ResponseEntity<Object> search(long userId, String search) {
+    public ResponseEntity<Object> search(String search) {
         Map<String, Object> parameters = Map.of("text", search);
-        return get("/search?text={text}", userId, parameters);
+        return get("/search?text={text}", null, parameters);
     }
 
     public ResponseEntity<Object> addComment(long userId, long itemId, CommentDto commentDto) {
