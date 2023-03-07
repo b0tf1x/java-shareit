@@ -1,19 +1,21 @@
 version: '3.8'
 services:
   gateway:
-    build: ./gateway
-    container_name: gateway
+    build: gateway
+    image: gateway
+    container_name: gateway_container
     ports:
       - "8080:8080"
     depends_on:
-      - db
       - server
+      - db
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
 
   server:
-    build: ./server
-    container_name: server
+    build: server
+    image: server
+    container_name: server_container
     ports:
       - "9090:9090"
     depends_on:
@@ -28,5 +30,5 @@ services:
       - "6541:5432"
     environment:
       - POSTGRES_DB=postgres
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
