@@ -22,24 +22,29 @@ import ru.practicum.shareit.user.dto.UserDto;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserController {
     private final UserClient userClient;
+
     @GetMapping
-    public ResponseEntity<Object>findAll(){
+    public ResponseEntity<Object> findAll() {
         return userClient.findAll();
     }
+
     @GetMapping("/{userId}")
-    public ResponseEntity<Object>findUserById(@PathVariable long userId){
+    public ResponseEntity<Object> findUserById(@PathVariable long userId) {
         return userClient.findUserById(userId);
     }
+
     @PostMapping
-    public ResponseEntity<Object> create(@Validated(Create.class)UserDto userDto){
+    public ResponseEntity<Object> create(@Validated(Create.class) UserDto userDto) {
         return userClient.create(userDto);
     }
+
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object>put(@PathVariable long userId, @Validated(Put.class) @RequestBody UserDto userDto){
-        return userClient.put(userId,userDto);
+    public ResponseEntity<Object> put(@PathVariable long userId, @Validated(Put.class) @RequestBody UserDto userDto) {
+        return userClient.put(userId, userDto);
     }
+
     @DeleteMapping("/{userId}")
-    public void delete(@PathVariable long userId){
+    public void delete(@PathVariable long userId) {
         userClient.delete(userId);
     }
 }
