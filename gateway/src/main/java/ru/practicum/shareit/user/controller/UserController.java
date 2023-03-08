@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +19,7 @@ import ru.practicum.shareit.user.dto.UserDto;
 @RestController
 @RequestMapping(path = "/users")
 @Validated
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@AllArgsConstructor
 public class UserController {
     private final UserClient userClient;
 
@@ -35,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@Validated(Create.class) UserDto userDto) {
+    public ResponseEntity<Object> create(@Validated(Create.class) @RequestBody UserDto userDto) {
         return userClient.create(userDto);
     }
 

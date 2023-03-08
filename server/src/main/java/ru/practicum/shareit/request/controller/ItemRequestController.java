@@ -23,7 +23,7 @@ import static ru.practicum.shareit.ShareItServer.USER_HEADER;
 @Validated
 @RestController
 @RequestMapping(path = "/requests")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class ItemRequestController {
     private final ItemRequestService itemRequestService;
 

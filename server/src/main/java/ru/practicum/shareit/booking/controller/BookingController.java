@@ -27,7 +27,7 @@ import static ru.practicum.shareit.ShareItServer.USER_HEADER;
 @Validated
 @RestController
 @RequestMapping(path = "/bookings")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class BookingController {
     private final BookingService bookingService;
 

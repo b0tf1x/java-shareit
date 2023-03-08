@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +22,7 @@ import static ru.practicum.shareit.ShareItGateway.USER_HEADER;
 @RestController
 @RequestMapping(path = "/requests")
 @Validated
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@AllArgsConstructor
 public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
 
