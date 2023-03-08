@@ -36,7 +36,7 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> create(long userId, ItemDto itemDto) {
-        return post("/", userId, itemDto);
+        return post("", userId, itemDto);
     }
 
     public ResponseEntity<Object> put(long userId, long itemId, ItemDto itemDto) {

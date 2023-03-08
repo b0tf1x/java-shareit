@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS ITEMS (
     description VARCHAR(512) NOT NULL,
     available BOOLEAN NOT NULL,
     owner BIGINT not null,
+    request bigint,
     CONSTRAINT fk_user
     FOREIGN KEY(owner)
     REFERENCES users(id)

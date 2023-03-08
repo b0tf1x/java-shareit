@@ -30,7 +30,7 @@ public class Item {
     @JoinColumn(name = "owner")
     private User owner;
     @ManyToOne
-    @JoinColumn(name = "requestorId")
+    @JoinColumn(name = "request")
     private ItemRequest itemRequest;
 }
 
