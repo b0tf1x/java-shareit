@@ -22,7 +22,8 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
-
+      - POSTGRES_DATASOURCE_USERNAME=postgres
+      - POSTGRES_DATASOURCE_PASSWORD=postgres
   db:
     image: postgres:14.6-alpine
     container_name: postgres_db
