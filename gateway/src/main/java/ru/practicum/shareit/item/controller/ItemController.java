@@ -46,7 +46,7 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ResponseEntity<Object> findItemById(@RequestHeader(USER_HEADER) long userId,
                                                @PathVariable long itemId) {
-        return itemClient.findItemById(userId, itemId);
+        return itemClient.findById(userId, itemId);
     }
 
     @GetMapping("/search")
