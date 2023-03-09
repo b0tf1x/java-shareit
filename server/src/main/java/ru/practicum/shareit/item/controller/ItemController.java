@@ -20,7 +20,7 @@ import ru.practicum.shareit.user.Create;
 
 import java.util.List;
 
-import static ru.practicum.shareit.ShareItApp.USER_HEADER;
+import static ru.practicum.shareit.ShareItServer.USER_HEADER;
 
 
 @RestController

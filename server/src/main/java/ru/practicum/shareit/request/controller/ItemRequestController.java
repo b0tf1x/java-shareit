@@ -18,7 +18,7 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
-import static ru.practicum.shareit.ShareItApp.USER_HEADER;
+import static ru.practicum.shareit.ShareItServer.USER_HEADER;
 
 @Validated
 @RestController
