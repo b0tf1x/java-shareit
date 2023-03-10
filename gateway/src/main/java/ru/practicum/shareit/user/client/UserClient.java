@@ -1,12 +1,12 @@
 package ru.practicum.shareit.user.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -24,23 +24,23 @@ public class UserClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> findAll() {
-        return get("/");
+    public ResponseEntity<Object> getAllUsers() {
+        return get("");
     }
 
-    public ResponseEntity<Object> findUserById(long userId) {
-        return get("/" + userId);
+    public ResponseEntity<Object> getById(long id) {
+        return get("/" + id);
     }
 
     public ResponseEntity<Object> create(UserDto userDto) {
-        return post("/", userDto);
+        return post("", userDto);
     }
 
-    public ResponseEntity<Object> put(long userId, UserDto userDto) {
-        return patch("/" + userId, userDto);
+    public ResponseEntity<Object> update(long id, UserDto userDto) {
+        return patch("/" + id, userDto);
     }
 
-    public void delete(long userId) {
-        delete("/" + userId);
+    public void delete(long id) {
+        delete("/" + id);
     }
 }

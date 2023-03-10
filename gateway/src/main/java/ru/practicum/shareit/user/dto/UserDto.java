@@ -1,23 +1,22 @@
 package ru.practicum.shareit.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.practicum.shareit.booking.Create;
-import ru.practicum.shareit.booking.Put;
-
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Email;
+import ru.practicum.shareit.common.Create;
+import ru.practicum.shareit.common.Update;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class UserDto {
     private Long id;
     @NotBlank(groups = Create.class)
     private String name;
-    @NotEmpty(groups = Create.class)
-    @Email(groups = {Create.class, Put.class})
+    @NotNull(groups = Create.class)
+    @Email(groups = {Create.class, Update.class})
     private String email;
 }

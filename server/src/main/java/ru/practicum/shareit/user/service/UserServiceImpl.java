@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -17,36 +17,21 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
 
-    @Override
-    @Transactional
-    public List<UserDto> findAll() {
-        return userRepository.findAll().stream()
-                .map(UserMapper::toUserDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public UserDto findUserById(long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new NotFoundException("Пользователь не найден");
-        });
-        return UserMapper.toUserDto(user);
-    }
+    private final UserRepository repository;
 
     @Override
     @Transactional
     public UserDto create(UserDto userDto) {
-        User user = userRepository.save(UserMapper.toUser(userDto));
+        User user = repository.save(UserMapper.toUser(userDto));
         return UserMapper.toUserDto(user);
     }
 
     @Override
     @Transactional
-    public UserDto put(long userId, UserDto userDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new NotFoundException("Пользователь для обновления не найден");
+    public UserDto put(long id, UserDto userDto) {
+        User user = repository.findById(id).orElseThrow(() -> {
+            throw new NotFoundException("Пользователь не найден");
         });
         if (userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail());
@@ -54,14 +39,31 @@ public class UserServiceImpl implements UserService {
         if (userDto.getName() != null) {
             user.setName(userDto.getName());
         }
-        user = userRepository.save(user);
+        return UserMapper.toUserDto(repository.save(user));
+    }
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        return repository.findAll().stream()
+                .map(UserMapper::toUserDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDto getById(long id) {
+        User user = repository.findById(id).orElseThrow(() -> {
+            throw new NotFoundException("Пользователь не найден");
+        });
         return UserMapper.toUserDto(user);
     }
 
     @Override
     @Transactional
-    public void delete(long userId) {
-        userRepository.findById(userId).ifPresent(userRepository::delete);
+    public UserDto delete(long id) {
+        User user = repository.findById(id).orElseThrow(() -> {
+            throw new NotFoundException("Пользователь не найден");
+        });
+        repository.findById(id).ifPresent(repository::delete);
+        return UserMapper.toUserDto(user);
     }
-
 }

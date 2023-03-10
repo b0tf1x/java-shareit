@@ -1,26 +1,25 @@
 package ru.practicum.shareit.item.mapper;
 
-import ru.practicum.shareit.item.dto.ItemBooking;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.item.dto.ItemDtoBooking;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
-
 import java.util.ArrayList;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
-        Long request = null;
-        if (item.getItemRequest() != null) {
-            request = item.getItemRequest().getId();
-        }
-        return new ItemDto(
-                item.getId(),
+        Long requestId = null;
+        if (item.getItemRequest() != null) requestId = item.getItemRequest().getId();
+        return new ItemDto(item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),
-                request
-        );
+                requestId);
     }
 
     public static Item toItem(ItemDto itemDto, User user, ItemRequest itemRequest) {
@@ -32,8 +31,8 @@ public class ItemMapper {
                 itemRequest);
     }
 
-    public static ItemBooking toItemBooking(Item item) {
-        return new ItemBooking(item.getId(),
+    public static ItemDtoBooking toItemDtoBooking(Item item) {
+        return new ItemDtoBooking(item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getAvailable(),

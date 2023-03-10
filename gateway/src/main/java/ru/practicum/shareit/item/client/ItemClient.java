@@ -1,16 +1,15 @@
 package ru.practicum.shareit.item.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.beans.factory.annotation.Value;
+import ru.practicum.shareit.item.dto.CommentDto;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import ru.practicum.shareit.client.BaseClient;
-import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
-
 import java.util.Map;
 
 @Service
@@ -27,11 +26,16 @@ public class ItemClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> findAll(long userId) {
-        return get("/", userId);
+
+    public ResponseEntity<Object> findAll(long userId, int from, int size) {
+        Map<String, Object> parameters = Map.of(
+                "from", from,
+                "size", size
+        );
+        return get("?from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> findById(long userId, long itemId) {
+    public ResponseEntity<Object> findItem(long userId, long itemId) {
         return get("/" + itemId, userId);
     }
 
@@ -39,13 +43,17 @@ public class ItemClient extends BaseClient {
         return post("", userId, itemDto);
     }
 
-    public ResponseEntity<Object> put(long userId, long itemId, ItemDto itemDto) {
+    public ResponseEntity<Object> update(long userId, long itemId, ItemDto itemDto) {
         return patch("/" + itemId, userId, itemDto);
     }
 
-    public ResponseEntity<Object> search(String search) {
-        Map<String, Object> parameters = Map.of("text", search);
-        return get("/search?text={text}", null, parameters);
+    public ResponseEntity<Object> searchItem(String text, long userId, int from, int size) {
+        Map<String, Object> parameters = Map.of(
+                "text", text,
+                "from", from,
+                "size", size
+        );
+        return get("/search?text={text}&from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> addComment(long userId, long itemId, CommentDto commentDto) {
